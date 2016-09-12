@@ -30,6 +30,7 @@ var server = new SMTPServer({
     authOptional: true,
     // logger: true,
     onConnect: function(session, callback){
+        console.log('tester', session);
         const cameraName = session.clientHostname.slice(0, -4);
         console.log('event', cameraName);
 
@@ -42,6 +43,16 @@ var server = new SMTPServer({
         }
 
         return callback();
+    },
+    onMailFrom: function(address, session, callback){
+        return callback(); // Accept the address
+    },
+    onRcptTo: function(address, session, callback){
+        return callback(); // Accept the address
+    },
+    onData: function(stream, session, callback){
+        stream.pipe(process.stdout); // print message to console
+        stream.on('end', callback);
     }
 });
 
